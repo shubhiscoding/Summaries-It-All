@@ -44,7 +44,34 @@ async function Bot(inputText) {
     
         xhr.send(JSON.stringify(payload));
       });
-  }
+}
+
+function convertToRichText(text) {
+  // Convert bold (**text**) to <strong>
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Convert italic (*text*) to <em>
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  
+  // Convert headers (# text) to <h1>, (## text) to <h2>, etc.
+  text = text.replace(/#{1,6} (.+)/g, function(match, content) {
+      const level = match.split(' ')[0].length;
+      return `<h${level}>${content}</h${level}>`;
+  });
+  
+  // Convert bullet points (* text) to <ul><li>
+  text = text.replace(/^\* (.+)/gm, '<li>$1</li>');
+  text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  
+  // Convert numbered lists (1. text) to <ol><li>
+  text = text.replace(/^\d+\. (.+)/gm, '<li>$1</li>');
+  text = text.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+  
+  // Convert line breaks to <br>
+  text = text.replace(/\n/g, '<br>');
+  
+  return text;
+}
 
 async function createOverlay(Text) {
     const overlay = document.createElement('div');
@@ -57,7 +84,7 @@ async function createOverlay(Text) {
         height: 100%;
         background-color: rgba(0, 0, 0, 0.7);
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         z-index: 10000;
         font-family: Arial, sans-serif;
@@ -84,6 +111,8 @@ async function createOverlay(Text) {
             color: white;
             border: none;
             padding: 10px 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
@@ -108,20 +137,23 @@ async function createOverlay(Text) {
     });
 
     const summary = await Bot(Text);
+    const richText = convertToRichText(summary);
     content.innerHTML = `
         <h2 style="margin-top: 0; color: #2c3e50; font-size: 24px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;">Summary</h2>
-        <div style="
+        <code style="
             font-size: 16px;
             line-height: 1.6;
             color: #34495e;
             margin-bottom: 20px;
             white-space: pre-wrap;
-        ">${summary}</div>
+        ">${richText}</code>
         <button id="close-overlay" style="
             background-color: #3498db;
             color: white;
             border: none;
             padding: 10px 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
@@ -140,6 +172,11 @@ async function createOverlay(Text) {
 
     document.getElementById('close-overlay').addEventListener('mouseout', (e) => {
         e.target.style.backgroundColor = '#3498db';
+    });
+    document.addEventListener('mousedown', function(event) {
+        if (event.target != content && event.target.id != 'close-overlay') {
+            document.body.removeChild(overlay);
+        }
     });
 }
 
@@ -286,16 +323,16 @@ function addSummaryButtonMedium() {
           border-radius: 99em;
         `;
         
-        // summaryButton.addEventListener('click', (e) => {
-        //   e.preventDefault();
-        //   e.stopPropagation();
-        //   var TextDiv = summaryButton.parentElement;
-        //   TextDiv = TextDiv.parentElement.parentElement;
-        //   TextDiv = TextDiv.parentElement.parentElement;
-        //   TextDiv = TextDiv.querySelector('[data-testid="tweetText"]');
-        //   var Text = TextDiv.textContent;
-        //   createOverlay(Text);
-        // });
+        summaryButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          var TextDiv = targetDiv.querySelector(".pw-post-body-paragraph").parentElement;
+          // TextDiv = TextDiv.parentElement.parentElement;
+          // TextDiv = TextDiv.parentElement.parentElement;
+          // TextDiv = TextDiv.querySelector('[data-testid="tweetText"]');
+          var Text = TextDiv.textContent;
+          createOverlay(Text);
+        });
         
         summaryButton.addEventListener('mouseenter', () => {
           summaryButton.style.color = 'black';
