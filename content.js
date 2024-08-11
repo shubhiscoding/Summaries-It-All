@@ -495,3 +495,12 @@ if(url.includes("whatsapp.com/")){
 if(url.includes("mail.google.com")){
   setInterval(addSummaryButtonGM, 2000);
 }
+
+chrome.runtime.onMessage.addListener(async(request, sender, sendResponse) => {
+  console.log("Message received in content script", request);
+  if (request.action === "summarize") {
+    await createOverlay(request.text);
+  }
+  sendResponse({status: "received"});
+  return true;
+});

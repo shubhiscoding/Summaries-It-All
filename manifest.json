@@ -3,10 +3,18 @@
   "name": "Summaries It All",
   "version": "1.0",
   "description": "Summaries It All is a Chrome extension that summarizes articles, posts and emails for you.",
-  "permissions": ["activeTab"],
+  "permissions": [  
+    "activeTab",
+    "contextMenus"
+],
+"host_permissions": [
+  "<all_urls>"
+],
   "content_scripts": [
     {
-      "matches": ["https://*.linkedin.com/*", "https://x.com/*", "https://*.medium.com/*", "https://web.whatsapp.com/*", "https://mail.google.com/*"],
+      "matches": [
+        "<all_urls>"
+      ],
       "js": ["config.js", "content.js"],
       "type": "module"
     }
