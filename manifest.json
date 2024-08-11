@@ -19,6 +19,9 @@
       "type": "module"
     }
   ],
+  "action":{
+    "default_icon": "assets/Logo.png"
+  },
   "background": {
     "service_worker": "background.js",
     "type": "module"
