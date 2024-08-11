@@ -135,9 +135,11 @@ async function createOverlay(Text) {
     document.getElementById('close-overlay').addEventListener('mouseout', (e) => {
         e.target.style.backgroundColor = '#3498db';
     });
-
-    const summary = await Bot(Text);
-    const richText = convertToRichText(summary);
+    let richText = "Text is too short to summaries.";
+    if(Text.length>100){
+      const summary = await Bot(Text);
+      richText = convertToRichText(summary);
+    }
     content.innerHTML = `
         <h2 style="margin-top: 0; color: #2c3e50; font-size: 24px; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;">Summary</h2>
         <code style="
@@ -181,7 +183,7 @@ async function createOverlay(Text) {
 }
 
 //LinkedIn
-function addSummaryButton() {
+function addSummaryButtonLI() {
     console.log("Adding summary button");
     const targetDivs = document.querySelectorAll('.update-v2-social-activity');
     console.log("Found target divs:", targetDivs.length);
@@ -357,10 +359,125 @@ function addSummaryButtonMedium() {
   }
 }
 
+//Whatsapp
+function addSummaryButtonWT() {
+  const targetDivs = document.querySelectorAll('._akbu');
+  console.log("Found target divs:", targetDivs.length);
+  
+  if (targetDivs.length > 0) {
+      targetDivs.forEach((targetDiv) => {
+          if (!targetDiv.parentElement.querySelector('.summary-button') && targetDiv.textContent.length>250) {
+              console.log("Creating new summary button");
+              const summaryButton = document.createElement('button');
+              summaryButton.textContent = 'Summaries';
+              summaryButton.className = 'summary-button';
+
+              summaryButton.style.cssText = `
+                  display: inline-block;
+                  background-color: #0c1317;
+                  border: none;
+                  color: white;
+                  font-size: 14px;
+                  font-weight: 600;
+                  padding: 8px 12px;
+                  cursor: pointer;
+                  transition: background-color 0.3s, color 0.3s;
+                  border-radius: 4px;
+              `;
+              
+              // Find the post URL
+              const postLink = targetDiv.querySelector('a.app-aware-link');
+              const postUrl = postLink ? postLink.href : 'Post URL not found';
+              
+              summaryButton.addEventListener('click', (e) => {
+                  console.log("Summary button clicked");
+                  e.preventDefault();
+                  e.stopPropagation();
+                  var Text = targetDiv.textContent;
+                  createOverlay(Text);
+              });
+              
+              // Hover effects (as before)
+              summaryButton.addEventListener('mouseenter', () => {
+                  summaryButton.style.backgroundColor = 'white';
+                  summaryButton.style.color = '#0c1317';
+              });
+              
+              summaryButton.addEventListener('mouseleave', () => {
+                  summaryButton.style.backgroundColor = '#0c1317';
+                  summaryButton.style.color = 'white';
+              });
+
+              if (targetDiv) {
+                  targetDiv.parentElement.appendChild(summaryButton);
+              }
+          }
+      });
+  }
+}
+
+//Gmail
+function addSummaryButtonGM() {
+  const targetDivs = document.querySelectorAll('.ha');
+  console.log("Found target divs:", targetDivs.length);
+  
+  if (targetDivs.length > 0) {
+      targetDivs.forEach((targetDiv) => {
+          if (!targetDiv.querySelector('.summary-button')) {
+              console.log("Creating new summary button");
+              const summaryButton = document.createElement('button');
+              summaryButton.textContent = 'Summaries';
+              summaryButton.className = 'summary-button';
+
+              summaryButton.style.cssText = `
+                  display: inline-block;
+                  background-color: rgb(26, 137, 23);
+                  border: none;
+                  color: white;
+                  font-size: 14px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: background-color 0.3s, color 0.3s;
+                  border-radius: 4px;
+              `;
+              
+              // Find the post URL
+              const postLink = targetDiv.querySelector('a.app-aware-link');
+              const postUrl = postLink ? postLink.href : 'Post URL not found';
+              
+              summaryButton.addEventListener('click', (e) => {
+                  console.log("Summary button clicked");
+                  e.preventDefault();
+                  e.stopPropagation();
+                  var Text = targetDiv.parentElement.parentElement.parentElement.parentElement.textContent;
+                  createOverlay(Text);
+              });
+              
+              // Hover effects (as before)
+              summaryButton.addEventListener('mouseenter', () => {
+                  summaryButton.style.backgroundColor = 'white';
+                  summaryButton.style.color = 'rgb(26, 137, 23)';
+              });
+              
+              summaryButton.addEventListener('mouseleave', () => {
+                  summaryButton.style.backgroundColor = 'rgb(26, 137, 23)';
+                  summaryButton.style.color = 'white';
+              });
+
+              if (targetDiv) {
+                // targetDiv.insertBefore(summaryButton, targetDiv.parentElement.lastChild);
+                targetDiv.appendChild(summaryButton);
+              }
+          }
+      });
+  }
+}
+
+
 let url = window.location.href;
 
 if(url.includes("linkedin.com")){
-  setInterval(addSummaryButton, 2000);
+  setInterval(addSummaryButtonLI, 2000);
 }
 
 if(url.includes("x.com")){
@@ -369,4 +486,12 @@ if(url.includes("x.com")){
 
 if(url.includes("medium.com")){
   setInterval(addSummaryButtonMedium, 2000);
+}
+
+if(url.includes("whatsapp.com/")){
+  setInterval(addSummaryButtonWT, 2000);
+}
+
+if(url.includes("mail.google.com")){
+  setInterval(addSummaryButtonGM, 2000);
 }
