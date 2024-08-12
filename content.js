@@ -7,7 +7,7 @@ async function Bot(inputText) {
       contents: [
         {
           parts: [
-            { text: inputText+" Hii gemini can you summarise this post, try not to miss any important details regarding the core topic of the post." },
+            { text: inputText+" Hii gemini can you Summarize this post, try not to miss any important details regarding the core topic of the post." },
           ],
         },
       ],
@@ -135,7 +135,7 @@ async function createOverlay(Text) {
     document.getElementById('close-overlay').addEventListener('mouseout', (e) => {
         e.target.style.backgroundColor = '#3498db';
     });
-    let richText = "Text is too short to summaries.";
+    let richText = "Text is too short to Summarize.";
     if(Text.length>100){
       const summary = await Bot(Text);
       richText = convertToRichText(summary);
@@ -193,7 +193,7 @@ function addSummaryButtonLI() {
             if (!targetDiv.querySelector('.summary-button')) {
                 console.log("Creating new summary button");
                 const summaryButton = document.createElement('button');
-                summaryButton.textContent = 'Summaries';
+                summaryButton.textContent = 'Summarize';
                 summaryButton.className = 'summary-button';
 
                 summaryButton.style.cssText = `
@@ -369,7 +369,7 @@ function addSummaryButtonWT() {
           if (!targetDiv.parentElement.querySelector('.summary-button') && targetDiv.textContent.length>250) {
               console.log("Creating new summary button");
               const summaryButton = document.createElement('button');
-              summaryButton.textContent = 'Summaries';
+              summaryButton.textContent = 'Summarize';
               summaryButton.className = 'summary-button';
 
               summaryButton.style.cssText = `
@@ -426,7 +426,7 @@ function addSummaryButtonGM() {
           if (!targetDiv.querySelector('.summary-button')) {
               console.log("Creating new summary button");
               const summaryButton = document.createElement('button');
-              summaryButton.textContent = 'Summaries';
+              summaryButton.textContent = 'Summarize';
               summaryButton.className = 'summary-button';
 
               summaryButton.style.cssText = `

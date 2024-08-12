@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Summaries It All",
+  "name": "Summarize It All",
   "version": "1.0",
-  "description": "Summaries It All is a Chrome extension that summarizes articles, posts and emails for you.",
+  "description": "Summarize It All is a Chrome extension that summarizes articles, posts and emails for you.",
   "permissions": [  
     "activeTab",
     "contextMenus"
