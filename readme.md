@@ -17,4 +17,5 @@ A browser extension that saves time, It summaries Posts from LinkedIn, X, Medium
     - IF YOU ARE ON ANYOTHER SITES ACCEPT THESE, then you can select the text you want to summaries and then right click on it, You'll find an option that says ```summaries```,which upon clicking will summaries the text.
 
 ## Demo
-Video coming soon...
+
+[Screencast from 2024-08-12 04-04-38.webm](https://github.com/user-attachments/assets/b296a6fe-8a37-4c40-9b09-bbc27bd239c7)
